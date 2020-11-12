@@ -175,7 +175,7 @@
 			$('.btn').bind('focus', function(){
 				console.log("button");
 			});
-			$('.btn').bind('click', function(){
+			$('.editor-toolbar-button').bind('click', function(){
 				console.log($(this)[0].id);
 				const selection = window.getSelection();
 				const range = selection.getRangeAt(0);
