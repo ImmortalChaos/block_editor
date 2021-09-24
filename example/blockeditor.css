@@ -49,7 +49,7 @@
 		border-left:none;
 	}
 	.editor-block {
-		max-width:610px;
+		max-width:876px;
 		box-sizing: border-box;
 	}
 	.editor-block-layout {
@@ -78,7 +78,7 @@
 		position:absolute;
 		margin-top:-7px;
 		margin-left:-10px;
-		width:610px;
+		width:876px;
 		height:7px;
 		box-shadow: -3px 0 0 0 #555d66;
 		border-top:1px solid #b5bcc2;
@@ -88,7 +88,7 @@
 		content:"";
 		position:absolute;
 		margin-left:-10px;
-		width:610px;
+		width:876px;
 		height:4px;
 		box-shadow: -3px 0 0 0 #555d66;
 		border-bottom:1px solid #b5bcc2;
@@ -126,6 +126,10 @@
 	.editor-editable [data-rich-text-placeholder]:after {
 		content: attr(data-rich-text-placeholder);
 		opacity: .62;
+	}
+	.be-container {
+		padding-top:16px;
+		padding-bottom:32px;
 	}
 	/**:focus {
 		outline: none;

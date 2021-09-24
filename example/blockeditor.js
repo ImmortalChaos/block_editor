@@ -41,9 +41,22 @@ const svgDefines = `
 	return svgDefines;
 }
 
+function isEmptyEditBlock(blockEl) {
+	if(blockEl==undefined) {
+		return true;
+	}
+	if($(blockEl).text().trim()=="") {
+		return true;
+	}
+	return false;
+}
+
 function hideToolBar() {	
 	$('.editor-toolbar').css("display", "none");
 	$('.editor-block').removeClass('is-selected');
+	if(currentBlock!=undefined && isEmptyEditBlock(currentBlock)) {
+		$(currentBlock).addClass('editor-editable');
+	}
 	console.log('called hideToolBar')
 }
 
@@ -99,15 +112,21 @@ class Editor {
 		this.createToolBar(container);
 		this.createEditor(container);
 		this.bindEvent();
+		this.initEditor();
 	}
 
 	click(target) {
 		console.log($(target));
 	}
 
+	initEditor() {
+		document.execCommand("defaultParagraphSeparator", false, "div");
+	}
+
 	bindEvent() {
-		$('.editor-board').bind('click', function(e) {
-			if($(e.target).hasClass('editor-board')) {
+		$('.be-container').bind('click', function(e) {
+			console.log(e);
+			if($(e.target).hasClass('be-container')) {
 				hideToolBar();				
 			}
 		});
@@ -268,6 +287,19 @@ class BlockEditor {
 	}
 
 	getHTML() {
+		let html = "";
+		$('#editor-contents').children().each(function(index, sectionEl) {
+			html += "<div class=\"section\">";
+			console.log(index + ": " + $(sectionEl).html());
+			$(sectionEl).each(function(indexChild, childEl) {
+				console.log(childEl.tagName);
+				//if(childEl.tagName=="span" && childEl.hasAttribute("data-rich-text-placeholder")) {
+				html += $(childEl).html();
+			//	console.log(index2 + ": " + $(item).html());
+			});
+			html += "</div>";
+		});
+		//return html;
 		return $('#editor-contents').html();
 	}
 
