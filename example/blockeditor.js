@@ -48,10 +48,10 @@ const svgDefines = `
 		<symbol id="infomation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 			<path d="M12 3.2c-4.8 0-8.8 3.9-8.8 8.8 0 4.8 3.9 8.8 8.8 8.8 4.8 0 8.8-3.9 8.8-8.8 0-4.8-4-8.8-8.8-8.8zm0 16c-4 0-7.2-3.3-7.2-7.2C4.8 8 8 4.8 12 4.8s7.2 3.3 7.2 7.2c0 4-3.2 7.2-7.2 7.2zM11 17h2v-6h-2v6zm0-8h2V7h-2v2z"></path>
 		</symbol>
-		<symbol id="heading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+		<symbol id="icon_heading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 			<path d="M6.2 5.2v13.4l5.8-4.8 5.8 4.8V5.2z"></path>
 		</symbol>
-		<symbol id="listmode" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+		<symbol id="icon_listmode" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 			<path d="M4 4v1.5h16V4H4zm8 8.5h8V11h-8v1.5zM4 20h16v-1.5H4V20zm4-8c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2z"></path>
 		</symbol>
 		<symbol id="bullet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -60,28 +60,28 @@ const svgDefines = `
 		<symbol id="numbering" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 		<path d="M11.1 15.8H20v-1.5h-8.9v1.5zm0-8.6v1.5H20V7.2h-8.9zM5 6.7V10h1V5.3L3.8 6l.4 1 .8-.3zm-.4 5.7c-.3.1-.5.2-.7.3l.1 1.1c.2-.2.5-.4.8-.5.3-.1.6 0 .7.1.2.3 0 .8-.2 1.1-.5.8-.9 1.6-1.4 2.5h2.7v-1h-1c.3-.6.8-1.4.9-2.1.1-.3 0-.8-.2-1.1-.5-.6-1.3-.5-1.7-.4z"></path>
 		</symbol>
-		<symbol id="h1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+		<symbol id="icon_h1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
 			<path d="M9 5h2v10H9v-4H5v4H3V5h2v4h4V5zm6.6 0c-.6.9-1.5 1.7-2.6 2v1h2v7h2V5h-1.4z"></path>
 		</symbol>
-		<symbol id="h2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+		<symbol id="icon_h2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
 			<path d="M7 5h2v10H7v-4H3v4H1V5h2v4h4V5zm8 8c.5-.4.6-.6 1.1-1.1.4-.4.8-.8 1.2-1.3.3-.4.6-.8.9-1.3.2-.4.3-.8.3-1.3 0-.4-.1-.9-.3-1.3-.2-.4-.4-.7-.8-1-.3-.3-.7-.5-1.2-.6-.5-.2-1-.2-1.5-.2-.4 0-.7 0-1.1.1-.3.1-.7.2-1 .3-.3.1-.6.3-.9.5-.3.2-.6.4-.8.7l1.2 1.2c.3-.3.6-.5 1-.7.4-.2.7-.3 1.2-.3s.9.1 1.3.4c.3.3.5.7.5 1.1 0 .4-.1.8-.4 1.1-.3.5-.6.9-1 1.2-.4.4-1 .9-1.6 1.4-.6.5-1.4 1.1-2.2 1.6V15h8v-2H15z"></path>
 		</symbol>
-		<symbol id="h3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+		<symbol id="icon_h3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
 			<path d="M12.1 12.2c.4.3.8.5 1.2.7.4.2.9.3 1.4.3.5 0 1-.1 1.4-.3.3-.1.5-.5.5-.8 0-.2 0-.4-.1-.6-.1-.2-.3-.3-.5-.4-.3-.1-.7-.2-1-.3-.5-.1-1-.1-1.5-.1V9.1c.7.1 1.5-.1 2.2-.4.4-.2.6-.5.6-.9 0-.3-.1-.6-.4-.8-.3-.2-.7-.3-1.1-.3-.4 0-.8.1-1.1.3-.4.2-.7.4-1.1.6l-1.2-1.4c.5-.4 1.1-.7 1.6-.9.5-.2 1.2-.3 1.8-.3.5 0 1 .1 1.6.2.4.1.8.3 1.2.5.3.2.6.5.8.8.2.3.3.7.3 1.1 0 .5-.2.9-.5 1.3-.4.4-.9.7-1.5.9v.1c.6.1 1.2.4 1.6.8.4.4.7.9.7 1.5 0 .4-.1.8-.3 1.2-.2.4-.5.7-.9.9-.4.3-.9.4-1.3.5-.5.1-1 .2-1.6.2-.8 0-1.6-.1-2.3-.4-.6-.2-1.1-.6-1.6-1l1.1-1.4zM7 9H3V5H1v10h2v-4h4v4h2V5H7v4z"></path>
 		</symbol>
-		<symbol id="h4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+		<symbol id="icon_h4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
 			<path d="M9 15H7v-4H3v4H1V5h2v4h4V5h2v10zm10-2h-1v2h-2v-2h-5v-2l4-6h3v6h1v2zm-3-2V7l-2.8 4H16z"></path>
 		</symbol>
-		<symbol id="h5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+		<symbol id="icon_h5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
 			<path d="M12.1 12.2c.4.3.7.5 1.1.7.4.2.9.3 1.3.3.5 0 1-.1 1.4-.4.4-.3.6-.7.6-1.1 0-.4-.2-.9-.6-1.1-.4-.3-.9-.4-1.4-.4H14c-.1 0-.3 0-.4.1l-.4.1-.5.2-1-.6.3-5h6.4v1.9h-4.3L14 8.8c.2-.1.5-.1.7-.2.2 0 .5-.1.7-.1.5 0 .9.1 1.4.2.4.1.8.3 1.1.6.3.2.6.6.8.9.2.4.3.9.3 1.4 0 .5-.1 1-.3 1.4-.2.4-.5.8-.9 1.1-.4.3-.8.5-1.3.7-.5.2-1 .3-1.5.3-.8 0-1.6-.1-2.3-.4-.6-.2-1.1-.6-1.6-1-.1-.1 1-1.5 1-1.5zM9 15H7v-4H3v4H1V5h2v4h4V5h2v10z"></path>
 		</symbol>
-		<symbol id="h6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+		<symbol id="icon_h6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
 			<path d="M9 15H7v-4H3v4H1V5h2v4h4V5h2v10zm8.6-7.5c-.2-.2-.5-.4-.8-.5-.6-.2-1.3-.2-1.9 0-.3.1-.6.3-.8.5l-.6.9c-.2.5-.2.9-.2 1.4.4-.3.8-.6 1.2-.8.4-.2.8-.3 1.3-.3.4 0 .8 0 1.2.2.4.1.7.3 1 .6.3.3.5.6.7.9.2.4.3.8.3 1.3s-.1.9-.3 1.4c-.2.4-.5.7-.8 1-.4.3-.8.5-1.2.6-1 .3-2 .3-3 0-.5-.2-1-.5-1.4-.9-.4-.4-.8-.9-1-1.5-.2-.6-.3-1.3-.3-2.1s.1-1.6.4-2.3c.2-.6.6-1.2 1-1.6.4-.4.9-.7 1.4-.9.6-.3 1.1-.4 1.7-.4.7 0 1.4.1 2 .3.5.2 1 .5 1.4.8 0 .1-1.3 1.4-1.3 1.4zm-2.4 5.8c.2 0 .4 0 .6-.1.2 0 .4-.1.5-.2.1-.1.3-.3.4-.5.1-.2.1-.5.1-.7 0-.4-.1-.8-.4-1.1-.3-.2-.7-.3-1.1-.3-.3 0-.7.1-1 .2-.4.2-.7.4-1 .7 0 .3.1.7.3 1 .1.2.3.4.4.6.2.1.3.3.5.3.2.1.5.2.7.1z"></path>
 		</symbol>
 		<symbol id="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 			<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM5 4.5h14c.3 0 .5.2.5.5v3.5h-15V5c0-.3.2-.5.5-.5zm8 5.5h6.5v3.5H13V10zm-1.5 3.5h-7V10h7v3.5zm-7 5.5v-4h7v4.5H5c-.3 0-.5-.2-.5-.5zm14.5.5h-6V15h6.5v4c0 .3-.2.5-.5.5z"></path>
 		</symbol>
-		<symbol id="image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+		<symbol id="icon_image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 			<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM5 4.5h14c.3 0 .5.2.5.5v8.4l-3-2.9c-.3-.3-.8-.3-1 0L11.9 14 9 12c-.3-.2-.6-.2-.8 0l-3.6 2.6V5c-.1-.3.1-.5.4-.5zm14 15H5c-.3 0-.5-.2-.5-.5v-2.4l4.1-3 3 1.9c.3.2.7.2.9-.1L16 12l3.5 3.4V19c0 .3-.2.5-.5.5z"></path>
 		</symbol>
 		<symbol id="tag" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -96,13 +96,13 @@ const svgDefines = `
 		<symbol id="imageright" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 			<path d="M14 6v12h6V6h-6zM4 9.5h7V8H4v1.5zm0 6h7V14H4v1.5z"></path>
 		</symbol>
-		<symbol id="code" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+		<symbol id="icon_code" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 			<path d="M20.8 10.7l-4.3-4.3-1.1 1.1 4.3 4.3c.1.1.1.3 0 .4l-4.3 4.3 1.1 1.1 4.3-4.3c.7-.8.7-1.9 0-2.6zM4.2 11.8l4.3-4.3-1-1-4.3 4.3c-.7.7-.7 1.8 0 2.5l4.3 4.3 1.1-1.1-4.3-4.3c-.2-.1-.2-.3-.1-.4z"></path>
 		</symbol>
 		<symbol id="separate" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 			<path d="M20.2 7v4H3.8V7H2.2v9h1.6v-3.5h16.4V16h1.6V7z"></path>
 		</symbol>
-		<symbol id="gallery" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+		<symbol id="icon_gallery" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 			<path d="M20.2 8v11c0 .7-.6 1.2-1.2 1.2H6v1.5h13c1.5 0 2.7-1.2 2.7-2.8V8h-1.5zM18 16.4V4.6c0-.9-.7-1.6-1.6-1.6H4.6C3.7 3 3 3.7 3 4.6v11.8c0 .9.7 1.6 1.6 1.6h11.8c.9 0 1.6-.7 1.6-1.6zM4.5 4.6c0-.1.1-.1.1-.1h11.8c.1 0 .1.1.1.1V12l-2.3-1.7c-.3-.2-.6-.2-.9 0l-2.9 2.1L8 11.3c-.2-.1-.5-.1-.7 0l-2.9 1.5V4.6zm0 11.8v-1.8l3.2-1.7 2.4 1.2c.2.1.5.1.8-.1l2.8-2 2.8 2v2.5c0 .1-.1.1-.1.1H4.6c0-.1-.1-.2-.1-.2z"></path>
 		</symbol>
 		<symbol id="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -132,13 +132,36 @@ function isEmptyEditBlock(blockEl) {
 	return false;
 }
 
+function hideToolBarSubMenu() {
+	const submenu = $('.editor-toolbar-submenu');
+	if(submenu!=undefined && !submenu.hasClass('editor-hide-menu')) {
+		submenu.addClass('editor-hide-menu');
+	}
+
+	const submenu2 = $('.editor-toolbar-section');
+	if(submenu2!=undefined && !submenu2.hasClass('editor-hide-menu')) {
+		submenu2.addClass('editor-hide-menu');
+	}	
+}
+
 function hideToolBar() {	
 	$('.editor-toolbar').css("display", "none");
 	$('.editor-block').removeClass('is-selected');
 	if(currentBlock!=undefined && isEmptyEditBlock(currentBlock)) {
 		$(currentBlock).addClass('editor-editable');
 	}
-	console.log('called hideToolBar')
+	hideToolBarSubMenu();
+}
+
+function showEditorPopupMenu(buttonEl, submenuClass) {
+	console.log('aaa');
+	const parentEl = $(buttonEl).parent();
+	const elOffset = parentEl.offset();
+	const startX = elOffset.left + parentEl.width() + 3 + "px";
+	const startY = elOffset.top - 1 + "px";
+	const submenu = $(submenuClass);
+	submenu.css({left:startX, top:startY});
+	submenu.removeClass('editor-hide-menu');
 }
 
 function focusBlockItem(e) {
@@ -161,9 +184,9 @@ function focusBlockItem(e) {
 		console.log($(this).offset().top);
 }
 
-function appendSection(targetEl, isChild) {
+function appendSection(targetEl, isChild, firstElement) {
 	var newBlock = document.createElement('section');
-	var div = document.createElement(paragraph_element);
+	var div = document.createElement(firstElement);
 	var spanEl = document.createElement('span');
 	spanEl.setAttribute('data-rich-text-placeholder','글쓰기로 시작하거나 / 키를 눌러 블럭 선택');
 	spanEl.setAttribute('contenteditable', 'false');
@@ -185,6 +208,31 @@ function appendSection(targetEl, isChild) {
 		console.log(targetEl.nextSibling);
 		targetEl.parentNode.insertBefore(newBlock, targetEl.nextSibling);
 	}
+}
+
+function appendParagraph(targetEl, isChild) {
+	appendSection(targetEl, isChild, paragraph_element);
+}
+
+function appendHeader(targetEl, isChild) {
+	appendSection(targetEl, isChild, 'h1');
+}
+
+function enableToolBarSubMenu(slotId, iconId) {
+	const slotObj = $(slotId);
+	if(slotObj.hasClass('editor-hide-slot')) {
+		slotObj.removeClass('editor-hide-slot');
+	}
+}
+
+function transformHeading(currentBlock) {
+	let html = "";
+	$(currentBlock).children().each(function(index, rootEl) {
+		html += "<h1>" + $(rootEl).html() + "</h1>"; 
+	});
+	$(currentBlock).html(html);
+	enableToolBarSubMenu('#slot-heading', 'icon_h1');
+	hideToolBar();
 }
 
 class Editor {
@@ -219,19 +267,26 @@ class Editor {
 			console.log("button");
 		});
 		$('.editor-toolbar-button').bind('click', function(){
-			console.log($(this)[0].id);
 			const selection = window.getSelection();
 			const range = selection.getRangeAt(0);
 			const elemId = $(this)[0].id;
 			if(elemId==="setbold") {
 				document.execCommand('bold',false,null);
 			} else if(elemId==="setitalic") {
-				document.execCommand('italic',false,null);					
+				document.execCommand('italic',false,null);		
+			} else if(elemId==="transformHeading") {
+				transformHeading(currentBlock);
 			} else if(elemId==="addSection") {
-				appendSection(currentBlock, false);
+				appendParagraph(currentBlock, false);
+				hideToolBarSubMenu();
+			} else if(elemId==="addHeading") {
+				appendHeader(currentBlock, false);
+				hideToolBarSubMenu();
+			} else if(elemId==="setSection") {
+				showEditorPopupMenu(this, ".editor-toolbar-section");
+			} else if(elemId==="moreMenu") {
+				showEditorPopupMenu(this, ".editor-toolbar-submenu");
 			}
-			console.log(range);
-			console.log("button::click");
 		});		
 	}
 
@@ -248,14 +303,18 @@ class Editor {
 		div.setAttribute('id', 'editor-contents');
 		container.appendChild(div);
 
-		appendSection(div, true);
+		appendParagraph(div, true);
 
 		return div;
 	}
 
-	createToolBarSlot(parentEl) {
+	createToolBarSlot(parentEl, slotId, isVisible) {
 		let div = document.createElement('div');
 		div.classList.add('editor-toolbar-slot');
+		if(!isVisible) {
+			div.classList.add('editor-hide-slot');
+		}
+		div.setAttribute('id', slotId);
 		parentEl.appendChild(div);
 
 		return div;
@@ -318,23 +377,67 @@ class Editor {
 		parentEl.appendChild(navMoveEl);				
 	}
 
+	createToolBarSubMenuRow(parentEl) {
+		const toolbarSubMenuRow = document.createElement('div');
+		toolbarSubMenuRow.classList.add('editor-submenu-row');
+		
+		parentEl.appendChild(toolbarSubMenuRow);
+		return toolbarSubMenuRow;		
+	}
+
+	createToolBarSubMenu(parentEl) {
+		const toolbarSubMenu = document.createElement('div');
+		toolbarSubMenu.classList.add('editor-toolbar-submenu');
+		toolbarSubMenu.classList.add('editor-hide-menu');
+
+		const slot1 = this.createToolBarSubMenuRow(toolbarSubMenu);
+		this.createToolBarButton(slot1, 'addSection', 'icon_section');
+		this.createToolBarButton(slot1, 'addHeading', 'icon_heading');
+		this.createToolBarButton(slot1, 'addCode', 'icon_code');
+
+		const slot2 = this.createToolBarSubMenuRow(toolbarSubMenu);
+		this.createToolBarButton(slot2, 'addImage', 'icon_image');
+		this.createToolBarButton(slot2, 'addGallery', 'icon_gallery');
+
+		parentEl.appendChild(toolbarSubMenu);
+	}
+
+	createToolBarSectionTypeMenu(parentEl) {
+		const toolbarSubMenu = document.createElement('div');
+		toolbarSubMenu.classList.add('editor-toolbar-section');
+		toolbarSubMenu.classList.add('editor-hide-menu');
+
+		this.createToolBarButton(toolbarSubMenu, 'transformParagraph', 'icon_section');
+		this.createToolBarButton(toolbarSubMenu, 'transformHeading', 'icon_heading');
+		this.createToolBarButton(toolbarSubMenu, 'transformListing', 'icon_listmode');
+
+		parentEl.appendChild(toolbarSubMenu);
+
+	}
+
 	createToolBar(container) {
 		let toolbar = document.createElement('div');
 		toolbar.classList.add('editor-toolbar');
 
-		const slotSection = this.createToolBarSlot(toolbar);
-		const slotAlign = this.createToolBarSlot(toolbar);
-		const slotText = this.createToolBarSlot(toolbar);
-		const slotMore = this.createToolBarSlot(toolbar);
+		const slotSection = this.createToolBarSlot(toolbar, 'slot-section', true);
+		const slotHeading = this.createToolBarSlot(toolbar, 'slot-heading', false);
+		const slotAlign = this.createToolBarSlot(toolbar, 'slot-align', true);
+		const slotText = this.createToolBarSlot(toolbar, 'slot-text', true);
+		const slotMore = this.createToolBarSlot(toolbar, 'slot-more', true);
 
-		this.createToolBarButton(slotSection, 'setsection', 'icon_section');
+		this.createToolBarButton(slotSection, 'setSection', 'icon_section');
+		this.createToolBarButton(slotHeading, 'setH1', 'icon_h1');
 		this.createToolBarButton(slotAlign, 'setleft', 'align_left');
 		this.createToolBarButton(slotAlign, 'setcenter', 'align_center');
 		this.createToolBarButton(slotAlign, 'setright', 'align_right');
 		this.createToolBarButton(slotText, 'setbold', 'icon_bold');
 		this.createToolBarButton(slotText, 'setitalic', 'icon_italic');
 		this.createToolBarButton(slotText, 'setlink', 'icon_link');
-		this.createToolBarButton(slotMore, 'addSection', 'icon_more');
+		this.createToolBarButton(slotMore, 'moreMenu', 'icon_more');
+
+		// create toolbar submenu
+		this.createToolBarSubMenu(container);
+		this.createToolBarSectionTypeMenu(container);
 
 		// create navigator
 		let toolnav = document.createElement('div');
