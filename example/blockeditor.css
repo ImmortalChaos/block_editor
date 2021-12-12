@@ -75,6 +75,9 @@
 		max-width:876px;
 		box-sizing: border-box;
 	}
+	.editor-block p:first-child {
+		min-height: 30px;
+	}
 	.editor-block-layout {
 		padding-left:10px;
 		padding-right:10px;

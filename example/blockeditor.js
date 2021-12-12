@@ -204,6 +204,25 @@ function focusBlockItem(e) {
 
 }
 
+function keydownBlockItem(e) {
+	if(e.key=='Backspace') {
+		if(currentBlock!=undefined && isEmptyEditBlock(currentBlock)) {
+			if(currentBlock.previousSibling) {
+				let prevBlock = currentBlock.previousSibling;
+				$(currentBlock).remove();
+				currentBlock = prevBlock;
+				if($(currentBlock).last()) {
+					$(currentBlock).last().focus();
+				} else {
+					$(currentBlock).focus();
+				}
+				window.getSelection().collapse(currentBlock, 1);
+			}
+			e.preventDefault();
+		}
+	}
+}
+
 function appendSection(targetEl, isChild, firstElement) {
 	var newBlock = document.createElement('section');
 	var div = document.createElement(firstElement);
@@ -222,6 +241,7 @@ function appendSection(targetEl, isChild, firstElement) {
 	div.appendChild(spanEl);
 	div.appendChild(br);
 	$(newBlock).bind('focus', focusBlockItem);
+	$(newBlock).bind('keydown', keydownBlockItem);
 	if(isChild) {
 		targetEl.appendChild(newBlock);
 	} else {
