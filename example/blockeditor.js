@@ -164,24 +164,44 @@ function showEditorPopupMenu(buttonEl, submenuClass) {
 	submenu.removeClass('editor-hide-menu');
 }
 
+function redrawToolbar(blockItem) {
+	var myHeight = $(blockItem)[0].getBoundingClientRect().height;
+	var centerPosition = (myHeight<72)?(42 - (72 - myHeight)/2):43;
+
+	var newPosition = $(blockItem).offset().top - 45;
+
+	$('.editor-toolbar').offset({top:newPosition});
+	$('.editor-toolbar').css("display", "block");
+	$('.editor-block-mover').css("top", centerPosition + "px");	
+}
+
 function focusBlockItem(e) {
-		$('.editor-toolbar').css("display", "none");
-		$('.editor-block').removeClass('is-selected');
-		$(this).addClass('is-selected'); 
-		currentBlock = this;
-		$(this).removeClass('editor-editable');
-		console.log(this);
-		console.log(e);
+	console.log('clicked::focusBlockItem');
+	// for editor-editable > span-placeholder
+	if(this!=currentBlock && currentBlock!=undefined && isEmptyEditBlock(currentBlock)) {
+		$(currentBlock).addClass('editor-editable');
+	}
 
-		// 왼쪽 이동바의 위치를 텍스트 영역 높이에 맞춰 보정한다.
-		var myHeight = $(this)[0].getBoundingClientRect().height;
-		var centerPosition = (myHeight<72)?(42 - (72 - myHeight)/2):43;
+	$('.editor-toolbar').css("display", "none");
+	$('.editor-block').removeClass('is-selected');
+	$(this).addClass('is-selected'); 
+	currentBlock = this;
+	$(this).removeClass('editor-editable');
 
-		$('.editor-toolbar').offset({top:$(this).offset().top});
-		$('.editor-toolbar').css("display", "block");
-		$('.editor-block-mover').css("top", centerPosition + "px");
-		console.log($(this)[0].getBoundingClientRect());
-		console.log($(this).offset().top);
+	// 왼쪽 이동바의 위치를 텍스트 영역 높이에 맞춰 보정한다.
+	var myHeight = $(this)[0].getBoundingClientRect().height;
+	var centerPosition = (myHeight<72)?(42 - (72 - myHeight)/2):43;
+
+	$('.editor-toolbar').offset({top:$(this).offset().top});
+	$('.editor-toolbar').css("display", "block");
+	$('.editor-block-mover').css("top", centerPosition + "px");
+
+	// 빈 블록이면 커서를 맨 뒤로 이동시킨다.
+	// span-placeholder를 클릭했을때 커서가 없어지기 때문에 이를 방지하기 위함이다.
+	if(isEmptyEditBlock(currentBlock)) {
+		window.getSelection().collapse(this, 1);
+	}
+
 }
 
 function appendSection(targetEl, isChild, firstElement) {
@@ -254,7 +274,6 @@ class Editor {
 
 	bindEvent() {
 		$('.be-container').bind('click', function(e) {
-			console.log(e);
 			if($(e.target).hasClass('be-container')) {
 				hideToolBar();				
 			}
@@ -358,6 +377,22 @@ class Editor {
 		buttonEl.setAttribute('type', 'button');
 		buttonEl.setAttribute('aria-label', labelTxt);
 		buttonEl.setAttribute('aria-disabled', 'false');
+
+		if(iconId=='nav_up') {
+			$(buttonEl).bind('click', function(e) {
+				if(currentBlock.previousSibling) {
+					$(currentBlock).insertBefore($(currentBlock.previousSibling));
+					redrawToolbar(currentBlock);
+				}
+			});
+		} else if(iconId=='nav_down') {
+			$(buttonEl).bind('click', function(e) {
+				if(currentBlock.nextSibling) {
+					$(currentBlock).insertAfter($(currentBlock.nextSibling));
+					redrawToolbar(currentBlock);
+				}
+			});			
+		}
 
 		this.createSvgIcon(buttonEl, iconId, '18');
 		parentEl.appendChild(buttonEl);
