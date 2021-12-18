@@ -14,8 +14,14 @@
 	<script src="blockeditor.js"></script>
 	<script language="javascript">
 	var blockeditor;
+
+	function linkfunc(txt) {
+		blockeditor.dialog.appendLink(txt, 'http://www.naver.com', 'post');
+	}
+
 	$(document).ready(function(){
 		blockeditor = new BlockEditor('editor-board');
+		blockeditor.setLinkCallbackFunction(linkfunc);
 	});
 
 	function getHtml() {

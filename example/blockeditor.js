@@ -1,5 +1,18 @@
+// Default Values
 let currentBlock;
+let momentElementId = '';
+
+// Callback Functions
+let linkCallbackFunc = undefined;
+
+let callbackTimerID;
+let editor_selection;
+
+let dialogHandler = undefined;
+
+// Defines
 const paragraph_element = "p";
+
 function getSvgDefines() {
 const svgDefines = `
 	<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -117,10 +130,25 @@ const svgDefines = `
 		<symbol id="link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 			<path d="M15.6 7.2H14v1.5h1.6c2 0 3.7 1.7 3.7 3.7s-1.7 3.7-3.7 3.7H14v1.5h1.6c2.8 0 5.2-2.3 5.2-5.2 0-2.9-2.3-5.2-5.2-5.2zM4.7 12.4c0-2 1.7-3.7 3.7-3.7H10V7.2H8.4c-2.9 0-5.2 2.3-5.2 5.2 0 2.9 2.3 5.2 5.2 5.2H10v-1.5H8.4c-2 0-3.7-1.7-3.7-3.7zm4.6.9h5.3v-1.5H9.3v1.5z"></path>
 		</symbol>
+		<symbol id="web" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+			<path d="M9 0C4.03 0 0 4.03 0 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zM1.11 9.68h2.51c.04.91.167 1.814.38 2.7H1.84c-.403-.85-.65-1.764-.73-2.7zm8.57-5.4V1.19c.964.366 1.756 1.08 2.22 2 .205.347.386.708.54 1.08l-2.76.01zm3.22 1.35c.232.883.37 1.788.41 2.7H9.68v-2.7h3.22zM8.32 1.19v3.09H5.56c.154-.372.335-.733.54-1.08.462-.924 1.255-1.64 2.22-2.01zm0 4.44v2.7H4.7c.04-.912.178-1.817.41-2.7h3.21zm-4.7 2.69H1.11c.08-.936.327-1.85.73-2.7H4c-.213.886-.34 1.79-.38 2.7zM4.7 9.68h3.62v2.7H5.11c-.232-.883-.37-1.788-.41-2.7zm3.63 4v3.09c-.964-.366-1.756-1.08-2.22-2-.205-.347-.386-.708-.54-1.08l2.76-.01zm1.35 3.09v-3.04h2.76c-.154.372-.335.733-.54 1.08-.464.92-1.256 1.634-2.22 2v-.04zm0-4.44v-2.7h3.62c-.04.912-.178 1.817-.41 2.7H9.68zm4.71-2.7h2.51c-.08.936-.327 1.85-.73 2.7H14c.21-.87.337-1.757.38-2.65l.01-.05zm0-1.35c-.046-.894-.176-1.78-.39-2.65h2.16c.403.85.65 1.764.73 2.7l-2.5-.05zm1-4H13.6c-.324-.91-.793-1.76-1.39-2.52 1.244.56 2.325 1.426 3.14 2.52h.04zm-9.6-2.52c-.597.76-1.066 1.61-1.39 2.52H2.65c.815-1.094 1.896-1.96 3.14-2.52zm-3.15 12H4.4c.324.91.793 1.76 1.39 2.52-1.248-.567-2.33-1.445-3.14-2.55l-.01.03zm9.56 2.52c.597-.76 1.066-1.61 1.39-2.52h1.76c-.82 1.08-1.9 1.933-3.14 2.48l-.01.04z"></path>
+		</symbol>
 	</svg>	
 `;
 	return svgDefines;
 }
+
+function countCharacter(s, c) { 
+  var result = 0, i = 0;
+  for(i;i<s.length;i++) {
+  	if(s[i]==c) {
+  		if(c.length>1) i+=c.length-1;
+  		result++;
+  	}
+  }
+
+  return result;
+};
 
 function isEmptyEditBlock(blockEl) {
 	if(blockEl==undefined) {
@@ -153,14 +181,203 @@ function hideToolBar() {
 	hideToolBarSubMenu();
 }
 
+function hideFocusoutObjects(clickX, clickY, elemId) {
+	const submenu = $(elemId);
+	if(submenu!=undefined && !submenu.hasClass('editor-hide-menu')) {
+		// 상위 엘리먼트를 클릭해서 창이 열리자 마자 닫히는 현상을 막기 위한 코드
+		if(momentElementId==elemId) {
+			momentElementId = "";
+			return;
+		}
+		// 클릭된 위치가 현재 visible인 개체의 범위를 벗어났다면 숨김 처리한다.
+		const rect = submenu[0].getBoundingClientRect();
+		if(!(rect.x <= clickX && clickX <= rect.x + rect.width &&
+		     rect.y <= clickY && clickY <= rect.y + rect.height)) {
+			submenu.addClass('editor-hide-menu');
+		}
+	}
+}
+
+function saveSelection() {
+    if (window.getSelection) {
+        sel = window.getSelection();
+        if (sel.getRangeAt && sel.rangeCount) {
+            return sel.getRangeAt(0);
+        }
+    } else if (document.selection && document.selection.createRange) {
+        return document.selection.createRange();
+    }
+    return null;
+}
+
+function restoreSelection(range) {
+    if (range) {
+        if (window.getSelection) {
+            sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        } else if (document.selection && range.select) {
+            range.select();
+        }
+    }
+}
+
+function showSelectionBox(selRange) {
+	let rects = window.getSelection().getRangeAt(0).getClientRects();
+	for(let i=0; i<rects.length; i++) {
+		let div = document.createElement('div');
+		div.classList.add('editor-selection');
+		const lineSpacing = (rects[i].height/4).toFixed();
+		$(div).css({top:rects[i].top-lineSpacing, left:rects[i].left, width:rects[i].width, height:rects[i].height+lineSpacing*2});
+		document.body.appendChild(div);
+		console.log(rects[i]);
+	}
+}
+
+function deleteSelectionBox() {
+	$('.editor-selection').remove();
+}
+
+function createCommonDialog(dialogId) {
+	let parentDiv = document.getElementById(dialogId);
+	let div = document.createElement('div');
+	div.setAttribute("id", "test");
+	div.classList.add('editor-dialog');
+	parentDiv.appendChild(div);
+
+	return div;
+}
+
+function setHyperlink(newLink) {
+	restoreSelection(editor_selection);
+	if (window.getSelection().toString()) {
+		if(callbackTimerID!=undefined) {
+			clearTimeout(callbackTimerID);
+		}
+		deleteSelectionBox();
+		let link = newLink;
+		if(!link.startsWith('http://') && !link.startsWith('https://')) {
+			if( countCharacter(link, '.')==1 ) {
+				link = 'www.' + link;
+			}
+			link = 'http://' + link;
+		}
+
+		var a = document.createElement('a');
+		a.href = link;
+		if($('#chkbox').is(':checked')) {
+			a.target = '_blank';
+		}
+		a.title = 'go ' + link;
+
+		$('.editor-dialog').remove();
+		window.getSelection().getRangeAt(0).surroundContents(a);
+	}
+}
+
+function createLinkDialogPage(dialog) {
+	// Search Query
+	let div1 = document.createElement('div'); // for input
+	let div2 = document.createElement('div'); // for callback
+	let div3 = document.createElement('div'); // for button
+
+	let inp = document.createElement('input');
+	inp.setAttribute('type', 'input');
+	inp.classList.add('editor-link-control__input')
+	div1.appendChild(inp);
+	dialog.appendChild(div1);
+
+	div2.setAttribute('id', 'callback_area');
+	div2.classList.add('editor-callback-area');
+	dialog.appendChild(div2);
+
+	div3.classList.add('editor-link-control__bottom')
+
+	// for open in new tab
+	let label = document.createElement('label');
+	label.classList.add('editor-form-switch-button');
+
+	let blankCheck = document.createElement('input');
+	//blankCheck.classList.add('components-form-toggle__input')
+	blankCheck.setAttribute('type', 'checkbox');
+	blankCheck.setAttribute('id', 'chkbox');
+	blankCheck.checked = true;
+
+	let spanCheck = document.createElement('span');
+	spanCheck.classList.add('onoff-switch');
+	label.appendChild(blankCheck);
+	label.appendChild(spanCheck);
+
+	let label2 = document.createElement('label');
+	label2.classList.add('editor-form-switch-label');
+	label2.appendChild(document.createTextNode('Open in new tab'));
+	label2.setAttribute('for', 'chkbox');
+
+	div3.appendChild(label);
+	div3.appendChild(label2);
+	dialog.appendChild(div3);
+
+	$(inp).bind('keydown', function(e) {
+		if(e.key=='Escape') {
+			deleteSelectionBox();
+			$(currentBlock).focus();
+		} else if(e.key=='Enter' && this.value!="") {
+			setHyperlink($(inp).val());
+			e.preventDefault();
+		}
+	});
+
+	$(inp).bind('input', function(e) {
+		if(callbackTimerID!=undefined) {
+			clearTimeout(callbackTimerID);
+		}
+		let webLinkTitle = document.getElementById('editor-web-link');
+		if(webLinkTitle!=undefined) {
+			let link = this.value;
+			if(!link.startsWith('http://') && !link.startsWith('https://')) {
+				link = 'http://' + link;
+			}			
+			$(webLinkTitle).text(link);
+		} else {
+			createDialogLinkItem(div2, this.value, 'Press ENTER to add this link', 'URL');
+		}
+
+		if(linkCallbackFunc!=undefined) {
+			callbackTimerID = setTimeout(linkCallbackFunc, 2000, this.value);
+		}
+		//dialogHandler.appendLink(this.value, 'http://' + this.value, 'URL');
+	});
+
+	showSelectionBox(editor_selection);
+
+	$(inp).focus();
+}
+
+function showEditorDialog(targetEl, menuid, dialogId) {
+	let dialog = createCommonDialog('editor-dialogs');
+	editor_selection = saveSelection();
+
+	if(menuid=='setLink') {
+		createLinkDialogPage(dialog);
+	}
+
+	const parentEl = $(targetEl).parent();
+	const elOffset = parentEl.offset();
+	const startX = elOffset.left + parentEl.width() + 3 + "px";
+	const startY = elOffset.top - 1 + "px";
+	const submenu = $('.editor-dialog');
+	submenu.css({left:startX, top:startY});
+}
+
 function showEditorPopupMenu(buttonEl, submenuClass) {
-	console.log('aaa');
+
 	const parentEl = $(buttonEl).parent();
 	const elOffset = parentEl.offset();
 	const startX = elOffset.left + parentEl.width() + 3 + "px";
 	const startY = elOffset.top - 1 + "px";
 	const submenu = $(submenuClass);
 	submenu.css({left:startX, top:startY});
+	momentElementId = submenuClass;
 	submenu.removeClass('editor-hide-menu');
 }
 
@@ -275,11 +492,24 @@ function transformHeading(currentBlock) {
 	hideToolBar();
 }
 
+function getDialogCommonHTML() {
+	return "<div class=\"editor-dialog\">\
+				<div class=\"editor-dialog-header\">Insert Link</div>\
+				<div class=\"editor-dialog-body\">\
+					<input type=\"text\" placeholder=\"Text\"/>\
+				</div>\
+				<div class=\"editor-dialog-fooler\">\
+					<button type=\"button\">OK</button>\
+				</div>\
+			</div>";
+}
+
 class Editor {
 	constructor(container) {
 		this.createSvgDefine(container);
 		this.createToolBar(container);
 		this.createEditor(container);
+		this.createDialog(container);
 		this.bindEvent();
 		this.initEditor();
 	}
@@ -321,6 +551,8 @@ class Editor {
 			} else if(elemId==="addHeading") {
 				appendHeader(currentBlock, false);
 				hideToolBarSubMenu();
+			} else if(elemId==="setLink") {
+				showEditorDialog(this, elemId, ".editor-dialog")
 			} else if(elemId==="setSection") {
 				showEditorPopupMenu(this, ".editor-toolbar-section");
 			} else if(elemId==="moreMenu") {
@@ -345,6 +577,14 @@ class Editor {
 		appendParagraph(div, true);
 
 		return div;
+	}
+
+	createDialog(container) {
+		let div = document.createElement('div');
+		div.setAttribute('id', 'editor-dialogs');
+		container.appendChild(div);
+
+		return div;		
 	}
 
 	createToolBarSlot(parentEl, slotId, isVisible) {
@@ -487,7 +727,7 @@ class Editor {
 		this.createToolBarButton(slotAlign, 'setright', 'align_right');
 		this.createToolBarButton(slotText, 'setbold', 'icon_bold');
 		this.createToolBarButton(slotText, 'setitalic', 'icon_italic');
-		this.createToolBarButton(slotText, 'setlink', 'icon_link');
+		this.createToolBarButton(slotText, 'setLink', 'icon_link');
 		this.createToolBarButton(slotMore, 'moreMenu', 'icon_more');
 
 		// create toolbar submenu
@@ -510,8 +750,82 @@ class Editor {
 
 }
 
+function createDialogLinkItem(parentEl, title, link, linktype) {
+	let btn = document.createElement('button');
+	btn.classList.add('editor-link-search-list');
+
+	if(linktype=='URL') {
+		let svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		svgEl.setAttribute('width', '24');
+		svgEl.setAttribute('height', '24');
+		svgEl.setAttribute('role', 'img');
+		svgEl.setAttribute('aria-hidden', 'true');
+		svgEl.setAttribute('focusable', 'false');
+
+		let useEl = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+		useEl.setAttributeNS("http://www.w3.org/1999/xlink", 'xlink:href', "#web");
+		svgEl.appendChild(useEl);
+		btn.appendChild(svgEl);		
+	}
+
+	let spanItem = document.createElement('span');
+	if(linktype=='URL') {
+		spanItem.classList.add('editor-link-control__web-item');
+	} else{
+		spanItem.classList.add('editor-link-control__search-item');
+	}
+
+	// Title Text
+	let spanTitle = document.createElement('span');
+	let textTitle = document.createTextNode(title);
+	spanTitle.appendChild(textTitle);
+	spanTitle.classList.add('editor-link-control__search-item-title');
+	if(linktype=='URL') {
+		spanTitle.setAttribute('id', 'editor-web-link');
+
+	}
+
+	// Link URL
+	let spanInfo = document.createElement('span');
+	let textInfo = document.createTextNode(link);
+	spanInfo.appendChild(textInfo);
+	spanInfo.classList.add('editor-link-control__search-item-info');
+
+	spanItem.appendChild(spanTitle);
+	spanItem.appendChild(spanInfo);
+
+	// Type
+	let spanType = document.createElement('span');
+	let textType = document.createTextNode(linktype);
+	spanType.appendChild(textType);
+	spanType.classList.add('editor-link-control__search-item-type');
+
+	btn.appendChild(spanItem);
+	btn.appendChild(spanType);
+
+	$(btn).bind('click', function() {
+		if(linktype=='URL') {
+			setHyperlink(title);
+		} else {
+			setHyperlink(link);
+		}
+	});
+
+	parentEl.appendChild(btn);
+}
+
+class BlockEditorDialogs {
+	appendLink(title, link, linktype) {
+		let searchListDiv = document.getElementById('callback_area');
+		if(searchListDiv!=undefined) {
+			createDialogLinkItem(searchListDiv, title, link, linktype);
+		}
+	}
+}
+
 class BlockEditor {
 	constructor(container, options={}) {
+		this.dialog = new BlockEditorDialogs();
 		this.options = options;
 		this.container = document.getElementById(container);
 
@@ -523,6 +837,10 @@ class BlockEditor {
 		this.container.classList.add('be-container');
 		this.editor = new Editor(this.container);
 		this.bindEvent();
+	}
+
+	setLinkCallbackFunction(callbackFn) {
+		linkCallbackFunc = callbackFn;		
 	}
 
 	getHTML() {
@@ -546,6 +864,11 @@ class BlockEditor {
 	bindEvent() {
 		$('.container').bind('focus', function(){
 			hideToolBar();
+		});
+		$('.container').bind('click', function(e){
+			// 클릭된 위치에 포함된 서브메뉴가 아니면 닫아 준다.
+			hideFocusoutObjects(e.clientX, e.clientY, '.editor-toolbar-submenu');
+			hideFocusoutObjects(e.clientX, e.clientY, '.editor-toolbar-section');
 		});
 	}
 
