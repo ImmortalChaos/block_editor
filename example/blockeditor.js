@@ -320,7 +320,12 @@ function createLinkDialogPage(dialog) {
 	$(inp).bind('keydown', function(e) {
 		if(e.key=='Escape') {
 			deleteSelectionBox();
+			$('.editor-dialog').remove();
+			if(editor_selection!=undefined) {
+				restoreSelection(editor_selection);
+			}
 			$(currentBlock).focus();
+			e.preventDefault();
 		} else if(e.key=='Enter' && this.value!="") {
 			setHyperlink($(inp).val());
 			e.preventDefault();
