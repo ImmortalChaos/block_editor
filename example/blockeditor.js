@@ -183,7 +183,22 @@ function hideToolBar() {
 
 function hideFocusoutObjects(clickX, clickY, elemId) {
 	const submenu = $(elemId);
-	if(submenu!=undefined && !submenu.hasClass('editor-hide-menu')) {
+	// for delete dialog
+	if(submenu.length && elemId=='.editor-dialog') {
+		if(momentElementId==elemId) {
+			momentElementId = "";
+			return;
+		}		
+		const rect = submenu[0].getBoundingClientRect();
+		if(!(rect.x <= clickX && clickX <= rect.x + rect.width &&
+		     rect.y <= clickY && clickY <= rect.y + rect.height)) {
+			$('.editor-dialog').remove();
+			deleteSelectionBox();
+		}
+		return;
+	} else
+	// for hiding
+	if(submenu.length && !submenu.hasClass('editor-hide-menu')) {
 		// 상위 엘리먼트를 클릭해서 창이 열리자 마자 닫히는 현상을 막기 위한 코드
 		if(momentElementId==elemId) {
 			momentElementId = "";
@@ -354,7 +369,7 @@ function createLinkDialogPage(dialog) {
 	});
 
 	showSelectionBox(editor_selection);
-
+	momentElementId = ".editor-dialog";
 	$(inp).focus();
 }
 
@@ -874,6 +889,7 @@ class BlockEditor {
 			// 클릭된 위치에 포함된 서브메뉴가 아니면 닫아 준다.
 			hideFocusoutObjects(e.clientX, e.clientY, '.editor-toolbar-submenu');
 			hideFocusoutObjects(e.clientX, e.clientY, '.editor-toolbar-section');
+			hideFocusoutObjects(e.clientX, e.clientY, '.editor-dialog');
 		});
 	}
 
