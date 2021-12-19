@@ -67,11 +67,17 @@ const svgDefines = `
 		<symbol id="icon_listmode" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 			<path d="M4 4v1.5h16V4H4zm8 8.5h8V11h-8v1.5zM4 20h16v-1.5H4V20zm4-8c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2z"></path>
 		</symbol>
-		<symbol id="bullet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+		<symbol id="icon_bullet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 			<path d="M11.1 15.8H20v-1.5h-8.9v1.5zm0-8.6v1.5H20V7.2h-8.9zM6 13c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-7c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
 		</symbol>
-		<symbol id="numbering" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-		<path d="M11.1 15.8H20v-1.5h-8.9v1.5zm0-8.6v1.5H20V7.2h-8.9zM5 6.7V10h1V5.3L3.8 6l.4 1 .8-.3zm-.4 5.7c-.3.1-.5.2-.7.3l.1 1.1c.2-.2.5-.4.8-.5.3-.1.6 0 .7.1.2.3 0 .8-.2 1.1-.5.8-.9 1.6-1.4 2.5h2.7v-1h-1c.3-.6.8-1.4.9-2.1.1-.3 0-.8-.2-1.1-.5-.6-1.3-.5-1.7-.4z"></path>
+		<symbol id="icon_numbering" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+			<path d="M11.1 15.8H20v-1.5h-8.9v1.5zm0-8.6v1.5H20V7.2h-8.9zM5 6.7V10h1V5.3L3.8 6l.4 1 .8-.3zm-.4 5.7c-.3.1-.5.2-.7.3l.1 1.1c.2-.2.5-.4.8-.5.3-.1.6 0 .7.1.2.3 0 .8-.2 1.1-.5.8-.9 1.6-1.4 2.5h2.7v-1h-1c.3-.6.8-1.4.9-2.1.1-.3 0-.8-.2-1.1-.5-.6-1.3-.5-1.7-.4z"></path>
+		</symbol>
+		<symbol id="icon_outdent" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+			<path d="M4 7.2v1.5h16V7.2H4zm8 8.6h8v-1.5h-8v1.5zm-4-4.6l-4 4 4 4 1-1-3-3 3-3-1-1z"></path>
+		</symbol>
+		<symbol id="icon_indent" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+			<path d="M4 7.2v1.5h16V7.2H4zm8 8.6h8v-1.5h-8v1.5zm-8-3.5l3 3-3 3 1 1 4-4-4-4-1 1z"></path>
 		</symbol>
 		<symbol id="icon_h1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
 			<path d="M9 5h2v10H9v-4H5v4H3V5h2v4h4V5zm6.6 0c-.6.9-1.5 1.7-2.6 2v1h2v7h2V5h-1.4z"></path>
@@ -460,10 +466,20 @@ function keydownBlockItem(e) {
 }
 
 function appendSection(targetEl, isChild, firstElement) {
-	var newBlock = document.createElement('section');
-	var div = document.createElement(firstElement);
+	let placeholderStr = '글쓰기로 시작하거나 / 키를 눌러 블럭을 선택합니다.';
+	let newBlock = document.createElement('section');
+	let firstEl = document.createElement(firstElement);
+	let currentEl = firstEl;
+
+	if(firstElement=='ul' || firstElement=='ol') {
+		placeholderStr = '목록을 이곳에 적어주세요.';
+		let subEl = document.createElement('li');
+		firstEl.appendChild(subEl);
+		currentEl = subEl;
+	}
+
 	var spanEl = document.createElement('span');
-	spanEl.setAttribute('data-rich-text-placeholder','글쓰기로 시작하거나 / 키를 눌러 블럭 선택');
+	spanEl.setAttribute('data-rich-text-placeholder',placeholderStr);
 	spanEl.setAttribute('contenteditable', 'false');
 	spanEl.classList.add('span-placeholder');
 	newBlock.setAttribute('contentEditable','true');
@@ -471,11 +487,14 @@ function appendSection(targetEl, isChild, firstElement) {
 	newBlock.classList.add('editor-block-layout');
 	newBlock.classList.add('editor-styles-wrapper');
 	newBlock.classList.add('editor-editable');
-	newBlock.appendChild(div); // div가 없으면 :after의 박스 하단선이 개행이 없을때 글자랑 겹치는 문제가 있어서 div를 생성한다.
+	newBlock.appendChild(firstEl); // div가 없으면 :after의 박스 하단선이 개행이 없을때 글자랑 겹치는 문제가 있어서 div를 생성한다.
+	currentEl.appendChild(spanEl);
+	
+	if(firstElement!='ul' && firstElement!='ol') {
+		let br = document.createElement('br'); // spanEl이 hiiden되면 박스가 찌그러지지 않게 빈 개행을 넣어둔다.
+		firstEl.appendChild(br);
+	}
 
-	var br = document.createElement('br'); // spanEl이 hiiden되면 박스가 찌그러지지 않게 빈 개행을 넣어둔다.
-	div.appendChild(spanEl);
-	div.appendChild(br);
 	$(newBlock).bind('focus', focusBlockItem);
 	$(newBlock).bind('keydown', keydownBlockItem);
 	if(isChild) {
@@ -492,6 +511,14 @@ function appendParagraph(targetEl, isChild) {
 
 function appendHeader(targetEl, isChild) {
 	appendSection(targetEl, isChild, 'h1');
+}
+
+function appendBullet(targetEl, isChild) {
+	appendSection(targetEl, isChild, 'ul');
+}
+
+function appendNumbering(targetEl, isChild) {
+	appendSection(targetEl, isChild, 'ol');
 }
 
 function enableToolBarSubMenu(slotId, iconId) {
@@ -570,6 +597,12 @@ class Editor {
 			} else if(elemId==="addHeading") {
 				appendHeader(currentBlock, false);
 				hideToolBarSubMenu();
+			} else if(elemId==="addBullet") {
+				appendBullet(currentBlock, false);
+				hideToolBarSubMenu();
+			} else if(elemId==="addNumbering") {
+				appendNumbering(currentBlock, false);
+				hideToolBarSubMenu();				
 			} else if(elemId==="setLink") {
 				showEditorDialog(this, elemId, ".editor-dialog")
 			} else if(elemId==="setSection") {
@@ -710,8 +743,12 @@ class Editor {
 		this.createToolBarButton(slot1, 'addCode', 'icon_code');
 
 		const slot2 = this.createToolBarSubMenuRow(toolbarSubMenu);
-		this.createToolBarButton(slot2, 'addImage', 'icon_image');
-		this.createToolBarButton(slot2, 'addGallery', 'icon_gallery');
+		this.createToolBarButton(slot2, 'addBullet', 'icon_bullet');
+		this.createToolBarButton(slot2, 'addNumbering', 'icon_numbering');
+
+		const slot3 = this.createToolBarSubMenuRow(toolbarSubMenu);
+		this.createToolBarButton(slot3, 'addImage', 'icon_image');
+		this.createToolBarButton(slot3, 'addGallery', 'icon_gallery');
 
 		parentEl.appendChild(toolbarSubMenu);
 	}
