@@ -909,7 +909,8 @@ class BlockEditor {
 				$(sectionEl).each(function(indexChild, childEl) {
 					console.log(childEl.tagName);
 					//if(childEl.tagName=="span" && childEl.hasAttribute("data-rich-text-placeholder")) {
-					html += $(childEl).html().replaceAll('<span data-rich-text-placeholder="글쓰기로 시작하거나 / 키를 눌러 블럭 선택" contenteditable="false" class="span-placeholder"></span>','');
+					let subhtml = $(childEl).html().replaceAll('<span data-rich-text-placeholder="글쓰기로 시작하거나 / 키를 눌러 블럭을 선택합니다." contenteditable="false" class="span-placeholder"></span>','');	
+					html += subhtml.replaceAll('<span data-rich-text-placeholder="목록을 이곳에 적어주세요." contenteditable="false" class="span-placeholder"></span>','');
 				});
 				html += "</section>";
 			}
