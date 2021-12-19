@@ -413,7 +413,6 @@ function redrawToolbar(blockItem) {
 }
 
 function focusBlockItem(e) {
-	console.log('clicked::focusBlockItem');
 	// for editor-editable > span-placeholder
 	if(this!=currentBlock && currentBlock!=undefined && isEmptyEditBlock(currentBlock)) {
 		$(currentBlock).addClass('editor-editable');
@@ -825,7 +824,8 @@ function createDialogLinkItem(parentEl, title, link, linktype) {
 
 	$(btn).bind('click', function() {
 		if(linktype=='URL') {
-			setHyperlink(title);
+			const webLinkTitle = document.getElementById('editor-web-link');
+			setHyperlink($(webLinkTitle).text());
 		} else {
 			setHyperlink(link);
 		}
