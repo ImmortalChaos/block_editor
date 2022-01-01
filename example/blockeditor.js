@@ -182,6 +182,9 @@ function isEmptyEditBlock(blockEl) {
 	if(blockEl==undefined) {
 		return true;
 	}
+	if($(blockEl).children('figure')) {
+		return false;
+	}
 	if($(blockEl).text().trim()=="") {
 		return true;
 	}
