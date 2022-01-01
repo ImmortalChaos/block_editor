@@ -126,7 +126,26 @@
 		background-color:  #eeeeee;
 		border-radius: 2px;
 	}
-
+	.editor-image-select {
+		padding: 10px 24px;
+		border: 1px solid #339933;
+		font-size: 12px;
+	}
+	.editor-image-select svg {
+		margin-right: 8px;
+		display: flex;
+	}
+	.editor-image-select-button {
+		margin-right: 8px;
+	}
+	.editor-image-title {
+		display: flex;
+		align-items: center;
+		margin-top: 5px;
+		margin-bottom: 5px;
+		font-size: 20px;
+		font-weight: 600;
+	}
 	.editor-toolbar {
 		position:absolute;
 		display:none;
