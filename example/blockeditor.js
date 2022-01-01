@@ -13,6 +13,11 @@ let dialogHandler = undefined;
 // Defines
 const paragraph_element = "p";
 
+const EDITOR_POSITION_LEFT = 1,
+      EDITOR_POSITION_RIGHT = 2,
+      EDITOR_POSITION_TOP = 3,
+      EDITOR_POSITION_BOTTOM = 4;
+
 function getSvgDefines() {
 const svgDefines = `
 	<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -144,6 +149,23 @@ const svgDefines = `
 	return svgDefines;
 }
 
+function appendSvgIconElement(iconId, iconSize) {
+	let svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+	svgEl.setAttribute('width', iconSize);
+	svgEl.setAttribute('height', iconSize);
+	svgEl.setAttribute('role', 'img');
+	svgEl.setAttribute('aria-hidden', 'true');
+	svgEl.setAttribute('focusable', 'false');
+
+	let useEl = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+	useEl.setAttributeNS("http://www.w3.org/1999/xlink", 'xlink:href', "#" + iconId);
+	svgEl.appendChild(useEl);
+
+	return svgEl;
+}
+
+
+
 function countCharacter(s, c) { 
   var result = 0, i = 0;
   for(i;i<s.length;i++) {
@@ -161,6 +183,9 @@ function isEmptyEditBlock(blockEl) {
 		return true;
 	}
 	if($(blockEl).text().trim()=="") {
+		return true;
+	}
+	if($(blockEl).children('.editor-template-block').length>0) {
 		return true;
 	}
 	return false;
@@ -296,6 +321,60 @@ function setHyperlink(newLink) {
 	}
 }
 
+function createImageFigureElement(imgUrl) {
+	let figureEl = document.createElement('figure');
+	let div = document.createElement('div');
+	let img = document.createElement('img');
+
+	img.src = imgUrl;
+	img.setAttribute('alt', '');
+	div.appendChild(img);
+	figureEl.appendChild(div);
+
+	// for image caption
+	//let figcaption = document.createElement('figcaption');
+	//figcaption.appendChild(document.createTextNode('Figure 1. Edit Caption'));
+	//figureEl.appendChild(figcaption);
+
+	return figureEl;
+}
+
+function replaceImageBlockURL(blockEl, imgUrl) {
+	if($(blockEl).children('.editor-template-block').length>0) {
+		$(blockEl).children('.editor-template-block').remove();
+	}
+
+	let figureEl = createImageFigureElement(imgUrl);
+	blockEl.appendChild(figureEl);
+}
+
+function createInputDialogPage(dialog) {
+	// Search Query
+	let div1 = document.createElement('div'); // for input
+
+	let inp = document.createElement('input');
+	inp.setAttribute('type', 'input');
+	inp.classList.add('editor-link-control__input')
+	div1.appendChild(inp);
+	dialog.appendChild(div1);
+
+	$(inp).bind('keydown', function(e) {
+		if(e.key=='Escape') {
+			$('.editor-dialog').remove();
+			$(currentBlock).focus();
+			e.preventDefault();
+		} else if(e.key=='Enter' && this.value!="") {
+			// something to do
+			replaceImageBlockURL(currentBlock, this.value);
+			$('.editor-dialog').remove();
+			e.preventDefault();
+		}
+	});
+
+	momentElementId = ".editor-dialog";
+	$(inp).focus();
+}
+
 function createLinkDialogPage(dialog) {
 	// Search Query
 	let div1 = document.createElement('div'); // for input
@@ -379,18 +458,27 @@ function createLinkDialogPage(dialog) {
 	$(inp).focus();
 }
 
-function showEditorDialog(targetEl, menuid, dialogId) {
+function showEditorDialog(targetEl, menuid, dialogId, popupPosition) {
 	let dialog = createCommonDialog('editor-dialogs');
 	editor_selection = saveSelection();
 
 	if(menuid=='setLink') {
 		createLinkDialogPage(dialog);
+	} else if(menuid=='setImageUrl') {
+		createInputDialogPage(dialog);		
 	}
 
 	const parentEl = $(targetEl).parent();
 	const elOffset = parentEl.offset();
-	const startX = elOffset.left + parentEl.width() + 3 + "px";
-	const startY = elOffset.top - 1 + "px";
+	let startX = 0;
+	let startY = 0;
+	if(popupPosition==EDITOR_POSITION_BOTTOM) {
+		startX = elOffset.left - 1 + "px";
+		startY = elOffset.top + parentEl.height() + 3 + "px";
+	} else {
+		startX = elOffset.left + parentEl.width() + 3 + "px";
+		startY = elOffset.top - 1 + "px";		
+	}
 	const submenu = $('.editor-dialog');
 	submenu.css({left:startX, top:startY});
 }
@@ -505,6 +593,74 @@ function appendSection(targetEl, isChild, firstElement) {
 	}
 }
 
+
+function appendImageSection(targetEl, isChild) {
+	let newBlock = document.createElement('section');
+	let firstEl = document.createElement('div');
+
+	firstEl.classList.add('editor-image-select');
+	firstEl.classList.add('editor-template-block'); // 내용이 없는 section block임을 의미한다.
+	newBlock.classList.add('editor-block');
+	newBlock.classList.add('editor-block-layout');
+	newBlock.classList.add('editor-styles-wrapper');
+	newBlock.classList.add('editor-editable');
+	newBlock.appendChild(firstEl);
+	
+	// first row
+	let firstRowDiv = document.createElement('div');
+	firstRowDiv.classList.add('editor-image-title');
+	let svgIconEl = appendSvgIconElement('icon_image', 24);
+	firstRowDiv.appendChild(svgIconEl);
+	firstRowDiv.appendChild(document.createTextNode('이미지'));
+
+	// second row
+	let secondRowDiv = document.createElement('div');
+	secondRowDiv.appendChild(document.createTextNode('Upload an image file, pick one from your media library, paste image from clipboard, or add one with a URL.'))
+
+	// menu row
+	let menuRowDiv = document.createElement('div');
+	let uploadBtn = document.createElement('button');
+	uploadBtn.setAttribute('type', 'button');
+	uploadBtn.classList.add('editor-image-select-button');
+	uploadBtn.appendChild(document.createTextNode('업로드'));
+
+	let mediaBtn = document.createElement('button');
+	mediaBtn.setAttribute('type', 'button');
+	mediaBtn.classList.add('editor-image-select-button');
+	mediaBtn.appendChild(document.createTextNode('미디어 라이브러리'));
+
+	let clipboardBtn = document.createElement('button');
+	clipboardBtn.setAttribute('type', 'button');
+	clipboardBtn.classList.add('editor-image-select-button');
+	clipboardBtn.appendChild(document.createTextNode('클립보드에서 가져오기'));
+
+	let urlBtn = document.createElement('button');
+	urlBtn.setAttribute('type', 'button');
+	urlBtn.classList.add('editor-image-select-button');
+	urlBtn.appendChild(document.createTextNode('URL로 가져오기'));
+	$(urlBtn).bind('click', function() {
+		showEditorDialog(this, 'setImageUrl', ".editor-dialog", EDITOR_POSITION_BOTTOM);
+	});
+
+	menuRowDiv.appendChild(uploadBtn);
+	menuRowDiv.appendChild(mediaBtn);
+	menuRowDiv.appendChild(clipboardBtn);
+	menuRowDiv.appendChild(urlBtn);
+
+	firstEl.appendChild(firstRowDiv);
+	firstEl.appendChild(secondRowDiv);
+	firstEl.appendChild(menuRowDiv);
+
+	$(newBlock).bind('click', focusBlockItem);
+	$(newBlock).bind('keydown', keydownBlockItem);
+
+	if(isChild) {
+		targetEl.appendChild(newBlock);
+	} else {
+		targetEl.parentNode.insertBefore(newBlock, targetEl.nextSibling);
+	}
+}
+
 function appendParagraph(targetEl, isChild) {
 	appendSection(targetEl, isChild, paragraph_element);
 }
@@ -519,6 +675,10 @@ function appendBullet(targetEl, isChild) {
 
 function appendNumbering(targetEl, isChild) {
 	appendSection(targetEl, isChild, 'ol');
+}
+
+function appendImage(targetEl, isChild) {
+	appendImageSection(targetEl, isChild);
 }
 
 function enableToolBarSubMenu(slotId, iconId) {
@@ -603,8 +763,11 @@ class Editor {
 			} else if(elemId==="addNumbering") {
 				appendNumbering(currentBlock, false);
 				hideToolBarSubMenu();				
+			} else if(elemId==="addImage") {
+				appendImage(currentBlock, false);
+				hideToolBarSubMenu();
 			} else if(elemId==="setLink") {
-				showEditorDialog(this, elemId, ".editor-dialog")
+				showEditorDialog(this, elemId, ".editor-dialog", EDITOR_POSITION_RIGHT);
 			} else if(elemId==="setSection") {
 				showEditorPopupMenu(this, ".editor-toolbar-section");
 			} else if(elemId==="moreMenu") {
@@ -905,9 +1068,8 @@ class BlockEditor {
 		$('#editor-contents').children().each(function(index, sectionEl) {
 			if(!isEmptyEditBlock(sectionEl)) {
 				html += "<section>";
-				console.log(index + ": " + $(sectionEl).html());
+				//console.log(index + ": " + $(sectionEl).html());
 				$(sectionEl).each(function(indexChild, childEl) {
-					console.log(childEl.tagName);
 					//if(childEl.tagName=="span" && childEl.hasAttribute("data-rich-text-placeholder")) {
 					let subhtml = $(childEl).html().replaceAll('<span data-rich-text-placeholder="글쓰기로 시작하거나 / 키를 눌러 블럭을 선택합니다." contenteditable="false" class="span-placeholder"></span>','');	
 					html += subhtml.replaceAll('<span data-rich-text-placeholder="목록을 이곳에 적어주세요." contenteditable="false" class="span-placeholder"></span>','');
